@@ -1,0 +1,76 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecture.education.mapper.UserMapper">
+    <insert id="signup" parameterType="UserVO">
+        INSERT INTO `user`
+        VALUES (#{id}, #{pw}, #{name}, #{email}, #{tel}, default, default, #{major_id})
+    </insert>
+    <select id="get_user" parameterType="string" resultType="UserVO">
+        SELECT * FROM `user` WHERE `id` = #{id}
+    </select>
+
+
+<!--로그인한 유저의 전공 찾기-->
+    <resultMap id="userWithMajor" type="UserVO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="major_id" column="major_id"/>
+        <association property="majorVO" javaType="MajorVO">
+            <id property="major_id" column="major_id"/>
+            <result property="major_name" column="major_name"/>
+        </association>
+    </resultMap>
+
+<!--    로그인한 유저의 전공 찾기-->
+    <select id="getUserWithMajor" resultMap="userWithMajor" parameterType="string">
+        SELECT u.id, u.name, u.major_id, m.major_name
+        FROM user u
+        LEFT JOIN major m ON u.major_id = m.major_id
+        WHERE u.id=#{id}
+    </select>
+
+<!--    아이디 중복 확인 -->
+    <select id="check_user_id" parameterType="string">
+        SELECT COUNT(*) FROM `user` WHERE `id`=#{userId}
+    </select>
+
+<!--    회원 정보 수정-->
+    <update id="edit_user" parameterType="UserVO" >
+        UPDATE `user` SET
+        `name`= #{name},`email`= #{email},`tel` = #{tel}
+        WHERE `id` = #{id}
+    </update>
+
+
+    <resultMap id="classVOResultMap" type="ClassVO">
+        <result column="class_id" property="class_id"/>
+        <result column="professor_name" property="professor_name"/>
+        <result column="class_number" property="class_number"/>
+    </resultMap>
+
+    <resultMap id="courseVOResultMap" type="CourseVO">
+        <result column="course_id" property="course_id"/>
+        <result column="course_name" property="course_name"/>
+    </resultMap>
+
+    <resultMap id="takeClassResultMap" type="TakeClassVO">
+        <id property="take_id" column="take_id" />
+        <result property="class_id" column="class_id" />
+        <result property="user_id" column="user_id" />
+        <collection property="classVO" ofType="ClassVO" resultMap="classVOResultMap"/>
+        <collection property="courseVO" ofType="CourseVO" resultMap="courseVOResultMap"/>
+    </resultMap>
+
+    <select id="get_take_class" parameterType="string" resultMap="takeClassResultMap">
+        SELECT
+        take_class.take_id,
+        classes.professor_name,
+        classes.class_number,
+        course.course_name
+        FROM `take_class`
+        JOIN `classes` ON take_class.class_id = classes.class_id
+        JOIN `course` ON classes.course_id = course.course_id
+        WHERE take_class.user_id = #{user_id}
+    </select>
+</mapper>

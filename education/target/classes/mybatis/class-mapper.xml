@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecture.education.mapper.ClassMapper">
+
+    <resultMap id="courseVO" type="CourseVO">
+        <result column="course_id" property="course_id"/>
+        <result column="course_name" property="course_name"/>
+        <result column="major_id" property="major_id"/>
+        <collection property="classVO" resultMap="classVO"/>
+    </resultMap>
+    <resultMap id="classVO" type="ClassVO">
+        <result column="class_id" property="class_id"/>
+        <result column="class_number" property="class_number"/>
+        <result column="cur_student_num" property="cur_student_num"/>
+        <result column="max_student_num" property="max_student_num"/>
+        <result column="professor_name" property="professor_name"/>
+        <result column="course_id" property="course_id"/>
+    </resultMap>
+    <select id="get_class" parameterType="int" resultMap="courseVO">
+        SELECT * FROM `classes`
+        JOIN `course` ON `classes`.course_id = `course`.course_id
+        WHERE `classes`.course_id = #{course_id}
+    </select>
+
+    <update id="update_stu" parameterType="int">
+        update `classes` set cur_student_num=cur_student_num+1 WHERE class_id=#{class_id};
+    </update>
+    <update id="update_stu_delete" parameterType="int">
+        update `classes` set cur_student_num=cur_student_num-1 WHERE class_id=#{class_id};
+    </update>
+
+
+
+</mapper>

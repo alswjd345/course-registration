@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"><meta charset="utf-8">
+<head th:replace="fragments/header :: header">
+
+</head>
+<head>
+  <th:block th:if="${msg}">
+    <script charset="UTF-8" >
+      top.alert("[[${msg}]]");
+    </script>
+  </th:block>
+
+</head>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <div>
+    <div style="margin-bottom: 15px;">
+      <span th:text="|${username}님의 수강신청 내역|" style="font-weight: bold;"></span>
+    </div>
+    <table class="table table-striped text-center">
+      <thead>
+      <tr>
+        <th>과목명</th>
+        <th>교수</th>
+        <th>분반</th>
+        <th>수강취소</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="takeClass, i: ${takeClasses}">
+        <td th:text="${takeClass.courseVO[0].course_name}"></td>
+        <td th:text="${takeClass.classVO[0].professor_name}"></td>
+        <td th:text="${takeClass.classVO[0].class_number}"></td>
+        <td>
+          <a th:href="@{/cancel/{id}/{class_id} (id=${takeClass.take_id},class_id=${takeClass.class_id})}" id="btn" class="btn btn-danger">CANCEL</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+<script src="../static/js/myCourseList.js" th:src="@{/js/myCourseList.js}"></script>
+</body>
+</html>

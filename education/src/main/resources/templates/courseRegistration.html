@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+</head>
+<meta charset="utf-8">
+<head>
+  <th:block th:if="${msg}">
+    <script charset="UTF-8">
+      top.alert("[[${msg}]]");
+    </script>
+  </th:block>
+</head>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <div>
+    <div>
+      <form  class="form-inline">
+        <div class="form-group mx-sm-1 mb-2">
+          <select class="form-control" >
+            <option th:value="${userVO.majorVO.major_name}" th:text="${userVO.majorVO.major_name}">선택 옵션</option>
+          </select>
+        </div>
+        <div class="form-group mx-sm-1 mb-2">
+          <select name="course_id" class="form-control">
+            <option value="">과목 선택</option>
+            <option th:each="course,i: ${courses.courseVO}"
+                    th:value="${courses.courseVO[i.index].course_id}"
+                    th:text="${courses.courseVO[i.index].course_name}">option</option>
+          </select>
+        </div>
+
+        <button type="submit"  class="btn btn-primary mb-2">검색</button>
+      </form>
+    </div>
+    <table class="table table-striped text-center">
+      <thead>
+      <tr>
+        <th>과목명</th>
+        <th>교수</th>
+        <th>분반</th>
+        <th>정원</th>
+        <th>인원</th>
+        <th>신청</th>
+      </tr>
+      </thead>
+      <tbody th:if="${classes}">
+      <tr th:each="class,i: ${classes.classVO}"  >
+        <td th:text="${classes.course_name}"></td>
+        <td th:text="${classes.classVO[i.index].professor_name}"></td>
+        <td th:text="${classes.classVO[i.index].class_number}"></td>
+        <td th:text="|${classes.classVO[i.index].max_student_num}|" class=""></td>
+        <td th:text="${classes.classVO[i.index].cur_student_num}" class="cur_num"></td>
+          <td>
+          <a href="#" th:href="@{/register/{id} (id=${classes.classVO[i.index].class_id})}"
+            id="registerBtn" class="btn btn-secondary">수강 신청</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:replace="fragments/footer :: footer"/>
+</div>
+<script src="../static/js/courseRegistration.js" th:src="@{/js/courseRegistration.js}"></script>
+</body>
+</html>

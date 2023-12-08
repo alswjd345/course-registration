@@ -1,0 +1,48 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<meta charset="utf-8">
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <div>
+        <div>
+            <form  class="form-inline">
+                <div class="form-group mx-sm-1 mb-2">
+                    <select class="form-control" th:name="major_id" >
+                        <option value="">전공 선택</option>
+                        <option  th:each="major : ${majors}" th:value="${major.major_id}" th:text="${major.major_name}">선택 옵션</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">검색</button>
+            </form>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>전공명</th>
+                <th>과목명</th>
+                <th>분반 조회</th>
+            </tr>
+            </thead>
+            <tbody th:if="${courses}">
+            <tr th:each="course, i: ${courses.courseVO}">
+                <td th:text="${i.index + 1}"></td>
+                <td th:text="${courses.major_name}"></td>
+                <td th:text="${courses.courseVO[i.index].course_name}"></td>
+                <td>
+                    <a href="#" th:href="@{/classes/{course_id} (course_id=${courses.courseVO[i.index].course_id})}" class="btn btn-secondary">
+                        분반 조회
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>

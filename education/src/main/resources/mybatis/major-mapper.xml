@@ -1,0 +1,33 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lecture.education.mapper.MajorMapper">
+
+<!--전공 학과들을 전부 가져옴    -->
+<resultMap id="majorlist" type="MajorVO">
+    <result property="major_id" column="major_id"/>
+    <result property="major_name" column="major_name"/>
+</resultMap>
+    <select id="get_major" resultMap="majorlist">
+        SELECT * FROM `major`
+    </select>
+
+<!--전공학과의 강의를 가져옴-->
+    <resultMap id="majorVO" type="MajorVO">
+        <result column="major_id" property="major_id"/>
+        <result column="major_name" property="major_name"/>
+        <collection property="courseVO" resultMap="courseVO"/>
+    </resultMap>
+    <resultMap id="courseVO" type="CourseVO">
+        <result column="course_id" property="course_id"/>
+        <result column="course_name" property="course_name"/>
+    </resultMap>
+    <select id="get_select_course" parameterType="int" resultMap="majorVO">
+        SELECT * FROM `course` AS c JOIN `major` AS m ON c.major_id = m.major_id WHERE m.major_id = #{major_id}
+    </select>
+
+
+    <select id="get_major_name" parameterType="int" resultType="MajorVO">
+        SELECT `major_name` FROM `major` where `major_id`= #{major_id}
+    </select>
+</mapper>

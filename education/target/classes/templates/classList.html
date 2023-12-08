@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:replace="fragments/header :: header"/>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+  <div>
+    <div style="margin-bottom: 15px;">
+
+      <a href="javascript:history.back()" class="btn btn-primary">Back</a>
+
+    </div>
+
+    <table class="table table-striped text-center">
+      <thead>
+      <tr>
+        <th>과목명</th>
+        <th>교수</th>
+        <th>분반</th>
+        <th>정원</th>
+        <th>인원</th>
+      </tr>
+      </thead>
+      <tbody  th:if="${classes}">
+        <tr th:each="class,i: ${classes.classVO}"  >
+         <td th:text="${classes.course_name}"></td>
+         <td th:text="${classes.classVO[i.index].professor_name}"></td>
+         <td th:text="|${classes.classVO[i.index].class_number}|"></td>
+         <td th:text="${classes.classVO[i.index].max_student_num}"></td>
+         <td th:text="${classes.classVO[i.index].cur_student_num}"></td>
+       </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:replace="fragments/footer :: footer"/>
+</div>
+</body>
+</html>
